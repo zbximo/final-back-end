@@ -26,17 +26,18 @@ class NebulaConnector:
 
     def connect(self):
         config = Config()
+        config.max_connection_pool_size = 30
 
-        connection_pool = ConnectionPool()
+        ng_connection_pool = ConnectionPool()
 
         # if the given servers are ok, return true, else return false
-        ok = connection_pool.init([(self.ip, self.port)], config)
+        ok = ng_connection_pool.init([(self.ip, self.port)], config)
         if ok:
-            return connection_pool
+            return ng_connection_pool
         else:
             return None
         # option 2 with session_context, session will be released automatically
-        # with connection_pool.session_context('root', 'nebula') as session:
+        # with ng_connection_pool.session_context('root', 'nebula') as session:
         #     # session
         #     session.execute('USE basketball')
         #     result = session.execute('MATCH p=(v:player{name:"Tim Duncan"})-->(v2) RETURN p')
@@ -47,11 +48,11 @@ class NebulaConnector:
 if __name__ == '__main__':
     config = Config()
 
-    connection_pool = ConnectionPool()
+    ng_connection_pool = ConnectionPool()
 
     # if the given servers are ok, return true, else return false
-    ok = connection_pool.init([("10.66.10.234", 9669)], config)
-    session = connection_pool.get_session("root", "nebula")
+    ok = ng_connection_pool.init([("10.66.10.234", 9669)], config)
+    session = ng_connection_pool.get_session("root", "nebula")
     print(session)
     print(session)
-    # print(connection_pool.connects())
+    # print(ng_connection_pool.connects())

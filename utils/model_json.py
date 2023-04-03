@@ -11,11 +11,12 @@ from service.Mysql.model import *
 
 
 def model_to_dict(result):
+    if result is None:
+        return None
     if isinstance(result, list):
+        if len(result) == 0:
+            return None
         model = result[0]
-        for i in result:
-            print(i)
-            print(i[0].__dict__)
         columns = [c for c in class_mapper(model.__class__).columns]
         result_dict = []
 
@@ -37,7 +38,7 @@ def model_to_dict(result):
         result_dict = {}
         for c in columns:
             c_type = str(c.type)
-            print(c.type == "DATETIME")
+            # print(c.type == "DATETIME")
             if c_type == "DATETIME":
                 result_dict[c.key] = datetime.datetime.strftime(getattr(model, c.key), "%Y-%m-%d %H:%M:%S")
             elif c_type == "DATE":
@@ -75,9 +76,9 @@ def dict_to_model(obj_db, data):
 
 
 if __name__ == '__main__':
-    session = MysqlConnect("8.130.78.75:3306", "root", "123456").connect("final")
-    db_session = session()
-    model_r = db_session.query(TbSysUser).limit(1).all()
+    session = MysqlConnect("10.66.10.234:3306", "root", "234").connect("final")
+    mysql_session = session()
+    model_r = mysql_session.query(TbSysUser).limit(1).all()
     print(model_to_dict(model_r))
     # for i in TbTelphoneRecord.__table__.columns:
     #     print(i.type, i.name)

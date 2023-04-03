@@ -27,7 +27,7 @@ class MysqlConnect:
 
 
 if __name__ == '__main__':
-    session = MysqlConnect("8.130.78.75:3306", "root", "123456").connect("final")
-    db_session = session()
+    session = MysqlConnect("10.66.10.234:3306", "root", "234").connect("final")
+    mysql_session = session()
 
-    # print(db_session.query(TbSysUser).limit(10).all())
+    # print(mysql_session.query(TbSysUser).limit(10).all())

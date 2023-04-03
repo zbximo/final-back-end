@@ -3,7 +3,7 @@ CREATE TABLE `tb_content_group_user`  (
   `group_user_id` int NULL,
   `keywords` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT NULL,
   `content` text CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL,
-  `datetime` datetime NULL,
+  `record_datetime` datetime NULL,
   `create_datetime` datetime NOT NULL ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_bin COMMENT = '存储组内用户发言' ROW_FORMAT = DYNAMIC;
@@ -14,7 +14,7 @@ CREATE TABLE `tb_content_personal`  (
   `to_app_user_id` int NOT NULL,
   `keywords` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT NULL,
   `content` text CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL,
-  `datetime` datetime NULL,
+  `record_datetime` datetime NULL,
   `create_datetime` datetime NOT NULL ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_bin COMMENT = '个人间不同应用的聊天记录' ROW_FORMAT = Dynamic;
@@ -92,7 +92,7 @@ CREATE TABLE `tb_telephone_record`  (
   `id` int NOT NULL AUTO_INCREMENT,
   `from_telephone_id` int NOT NULL,
   `to_telephone_id` int NOT NULL,
-  `datetime` datetime NULL,
+  `record_datetime` datetime NULL,
   `create_datetime` datetime NOT NULL ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_bin COMMENT = '个人间电话记录' ROW_FORMAT = Dynamic;

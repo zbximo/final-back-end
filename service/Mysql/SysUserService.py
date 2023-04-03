@@ -5,7 +5,7 @@
 
 
 from model import *
-from service.Mysql.db_connector import MysqlConnect
+from db_connector import MysqlConnect
 from utils.Response import CodeNumber
 
 
@@ -21,27 +21,27 @@ from utils.Response import CodeNumber
 
 
 class SysUserService:
-    def __init__(self, session):
-        self.Session = session
+    def __init__(self, mysql_session):
+        self.mysql_session = mysql_session
         pass
 
     def query_sys_user(self, filter):
-        db_session = self.Session()
-        return db_session.query(TbSysUser).filter_by(**filter).all()
+        mysql_session = self.mysql_session()
+        return mysql_session.query(TbSysUser).filter_by(**filter).all()
 
     def update_sys_user(self, update_info, filter):
-        db_session = self.Session()
-        result = db_session.query(TbSysUser).filter_by(**filter).update(update_info)
-        db_session.commit()
-        db_session.close()
+        mysql_session = self.mysql_session()
+        result = mysql_session.query(TbSysUser).filter_by(**filter).update(update_info)
+        mysql_session.commit()
+        mysql_session.close()
         return result
 
     def login(self, data):
         res = {
             "code": CodeNumber.ERROR
         }
-        db_session = self.Session()
-        r = db_session.query(TbSysUser).filter(TbSysUser.account == data["account"])
+        mysql_session = self.mysql_session()
+        r = mysql_session.query(TbSysUser).filter(TbSysUser.account == data["account"])
         if r.first():
             r1 = r.filter(TbSysUser.pwd == data["pwd"])
             if r1.first():
@@ -66,6 +66,7 @@ if __name__ == '__main__':
         "pwd": "222"
 
     }
+
     Session = MysqlConnect("10.66.10.234:3306", "root", "234").connect("final")
     SUS = SysUserService(Session)
     r = SUS.login(filter)

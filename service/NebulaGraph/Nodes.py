@@ -16,6 +16,7 @@
 
 
 class NodeUserInfo:
+    # Mysql: TbInfoUser
     __NodeName__ = 'UserInfo'
     __type__ = "Node"
     id: str
@@ -26,28 +27,31 @@ class NodeUserInfo:
 
 
 class NodeAppUserInfo:
+    # Mysql: TbInfoAppUser
     __NodeName__ = 'AppUserInfo'
     __type__ = "Node"
 
     id: str
     user_id: int  # 连接NodeUserInfo: id，不显示
     app_id: int
-    app_name: int  # app名字,根据app_id查出来
+    app_name: str  # app名字,根据app_id查出来
     app_user_account: str
     app_user_nickname: str
 
 
 class NodeGroupInfo:
+    # TbInfoGroup
     __NodeName__ = 'GroupInfo'
     __type__ = "Node"
     id: str
     group_id: str  # 组的id
     group_name: str
     app_id: int
-    app_name: int  # app名字,根据app_id查出来
+    app_name: str  # app名字,根据app_id查出来
 
 
 class NodeTelephoneInfo:
+    # TbInfoTelephone
     __NodeName__ = 'TelephoneInfo'
     __type__ = "Node"
     id: str

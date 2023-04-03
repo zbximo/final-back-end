@@ -7,48 +7,52 @@
 
 
 class RelationAppUser:
+    # TbInfoAppUser
     __ReName__ = 'RelationAppUser'
     __type__ = "Relation"
     __args__ = "边：关联 用户信息 和 用户应用信息。"
 
     id: str
     # NodeUserInfo-->NodeAppUserInfo
-    from_user: int  # NodeAppUserInfo.user_id == NodeUserInfo.id
-    to_app: int  # NodeAppUserInfo.id
+    from_user: str  # NodeAppUserInfo.user_id == NodeUserInfo.id   TbInfoAppUser.user_id
+    to_app: str  # NodeAppUserInfo.id                              TbInfoAppUser.app_id
 
 
 class RelationUserAppGroup:
+    # TbInfoGroupUser
     __ReName__ = 'RelationUserAppGroup'
     __type__ = "Relation"
     __args__ = "边：关联 用户应用信息 和 应用群组信息。 主要存储用户在群组里的聊天记录"
     id: str
     # NodeAppUserInfo-->NodeGroupInfo
-    from_app_user_id: int  # NodeAppUserInfo.user_id
-    to_app_group_id: int  # NodeGroupInfo.id
-    contents: dict
+    from_app_user_id: str  # NodeAppUserInfo.id  TbInfoGroupUser.app_user_id
+    to_app_group_id: str  # NodeGroupInfo.id    TbInfoGroupUser.group_id
+    contents: list  # TbContentGroupUser---TbInfoGroupUser
     """
     [
         {
              "content": str,
              "keywords": str,
-             "datetime": str
+             "record_datetime": str
         }
     ]
     """
 
 
 class RelationTelephoneInfo:
+    # TbInfoTelephone
     __ReName__ = 'RelationUserTelephone'
     __type__ = "Relation"
     __args__ = "边：关联 用户信息 和 电话信息。 "
 
     id: str
     # NodeUserInfo-->NodeTelephoneInfo
-    from_user_id: int  # NodeUserInfo.id
-    to_telephone_id: int  # NodeTelephoneInfo.id
+    from_user_id: str  # NodeUserInfo.id       TbInfoTelephone.user_id
+    to_telephone_id: str  # NodeTelephoneInfo.id  TbInfoTelephone.id
 
 
 class RelationPersonalContent:
+    # TbContentPersonal
     __ReName__ = 'RelationPersonalContent'
     __type__ = "Relation"
     # __args__ = {'comment': '个人间不同应用的聊天记录'}
@@ -56,21 +60,22 @@ class RelationPersonalContent:
 
     id: str
     # NodeAppUserInfo-->NodeAppUserInfo
-    from_app_user_id: int  # NodeAppUserInfo.id
-    to_app_user_id: int  # NodeAppUserInfo.id
-    contents: dict
+    from_app_user_id: str  # NodeAppUserInfo.id    TbContentPersonal.from_app_user_id
+    to_app_user_id: str  # NodeAppUserInfo.id    TbContentPersonal.to_app_user_id
+    contents: list  # TbContentPersonal.other
     """
     [
         {
              "content": str,
              "keywords": str,
-             "datetime": str
+             "record_datetime": str
         }
     ]
     """
 
 
 class RelationTelephoneRecord:
+    # TbTelephoneRecord
     __ReName__ = 'RelationTelephoneRecord'
     __type__ = "Relation"
     # __args__ = {'comment': '个人间电话记录'}
@@ -78,13 +83,13 @@ class RelationTelephoneRecord:
 
     id: str
     # NodeTelephoneInfo-->NodeTelephoneInfo
-    from_telephone_id: int  # NodeTelephoneInfo.id
-    to_telephone_id: int  # NodeTelephoneInfo.id
+    from_telephone_id: str  # NodeTelephoneInfo.id   TbTelephoneRecord.from_telephone_id
+    to_telephone_id: str  # NodeTelephoneInfo.id     TbTelephoneRecord.to_telephone_id
     records: dict
     """
     [
         {
-             "datetime": str
+             "record_datetime": str
         }
     ]
     """

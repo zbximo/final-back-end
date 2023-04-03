@@ -98,7 +98,7 @@ class TbContentPersonal(Base):
     to_app_user_id = Column(ForeignKey('tb_info_app_user.id', ondelete='RESTRICT', onupdate='RESTRICT'), nullable=False, index=True)
     keywords = Column(VARCHAR(255))
     content = Column(TEXT)
-    datetime = Column(DateTime)
+    record_datetime = Column(DateTime)
     create_datetime = Column(DateTime, nullable=False)
 
     from_app_user = relationship('TbInfoAppUser', primaryjoin='TbContentPersonal.from_app_user_id == TbInfoAppUser.id')
@@ -125,7 +125,7 @@ class TbTelephoneRecord(Base):
     id = Column(Integer, primary_key=True)
     from_telephone_id = Column(ForeignKey('tb_info_telephone.id'), nullable=False, index=True)
     to_telephone_id = Column(ForeignKey('tb_info_telephone.id'), nullable=False, index=True)
-    datetime = Column(DateTime)
+    record_datetime = Column(DateTime)
     create_datetime = Column(DateTime, nullable=False)
 
     from_telephone = relationship('TbInfoTelephone', primaryjoin='TbTelephoneRecord.from_telephone_id == TbInfoTelephone.id')
@@ -140,7 +140,7 @@ class TbContentGroupUser(Base):
     group_user_id = Column(ForeignKey('tb_info_group_user.id', ondelete='RESTRICT', onupdate='RESTRICT'), index=True)
     keywords = Column(VARCHAR(255))
     content = Column(TEXT)
-    datetime = Column(DateTime)
+    record_datetime = Column(DateTime)
     create_datetime = Column(DateTime, nullable=False)
 
     group_user = relationship('TbInfoGroupUser')
