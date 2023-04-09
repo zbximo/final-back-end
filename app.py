@@ -21,7 +21,8 @@ ng_connection_pool = NebulaConnector("10.66.10.234", 9669, "root", "nebula").con
 #     # ng_connection_pool.close()
 #     print(111)
 #     return jsonify(333)
-
+# @app.route('/', methods=['GET'])
+# def print_hi():
 
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':

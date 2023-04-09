@@ -1,5 +1,5 @@
 # coding: utf-8
-from sqlalchemy import Column, Date, DateTime, ForeignKey, Integer
+from sqlalchemy import Column, Date, DateTime, Float, ForeignKey, Integer, String
 from sqlalchemy.dialects.mysql import TEXT, VARCHAR
 from sqlalchemy.orm import relationship
 from sqlalchemy.ext.declarative import declarative_base
@@ -25,6 +25,8 @@ class TbInfoUser(Base):
     card_id = Column(VARCHAR(255), nullable=False)
     birthday = Column(Date)
     sex = Column(VARCHAR(255))
+    arrested = Column(String(255, 'utf8mb4_bin'), comment='是否被抓捕')
+    score = Column(Float, comment='分数')
     create_datetime = Column(DateTime, nullable=False)
 
 
@@ -37,13 +39,29 @@ class TbSysUserPermission(Base):
     create_datetime = Column(DateTime, nullable=False)
 
 
+class TbDelivery(Base):
+    __tablename__ = 'tb_delivery'
+    __table_args__ = {'comment': '个人间快递信息'}
+
+    id = Column(Integer, primary_key=True)
+    from_user_id = Column(ForeignKey('tb_info_user.id'), nullable=False, index=True)
+    to_user_id = Column(ForeignKey('tb_info_user.id'), nullable=False, index=True)
+    from_address = Column(VARCHAR(255))
+    to_address = Column(VARCHAR(255))
+    record_datetime = Column(DateTime)
+    create_datetime = Column(DateTime, nullable=False)
+
+    from_user = relationship('TbInfoUser', primaryjoin='TbDelivery.from_user_id == TbInfoUser.id')
+    to_user = relationship('TbInfoUser', primaryjoin='TbDelivery.to_user_id == TbInfoUser.id')
+
+
 class TbInfoAppUser(Base):
     __tablename__ = 'tb_info_app_user'
     __table_args__ = {'comment': '由app_id和user_id组合，保存app_user_id，即APP用户账号。'}
 
     id = Column(Integer, primary_key=True)
-    user_id = Column(ForeignKey('tb_info_user.id', ondelete='RESTRICT', onupdate='RESTRICT'), nullable=False, index=True)
-    app_id = Column(ForeignKey('tb_info_app.id', ondelete='RESTRICT', onupdate='RESTRICT'), nullable=False, index=True)
+    user_id = Column(ForeignKey('tb_info_user.id'), nullable=False, index=True)
+    app_id = Column(ForeignKey('tb_info_app.id'), nullable=False, index=True)
     app_user_account = Column(VARCHAR(255), nullable=False)
     app_user_nickname = Column(VARCHAR(255))
     create_datetime = Column(DateTime, nullable=False)
@@ -91,7 +109,7 @@ class TbSysUser(Base):
 
 class TbContentPersonal(Base):
     __tablename__ = 'tb_content_personal'
-    __table_args__ = {'comment': '个人间不同应用的聊天记录'}
+    __table_args__ = {'comment': '个人间不同应用的聊天记录、购物记录'}
 
     id = Column(Integer, primary_key=True)
     from_app_user_id = Column(ForeignKey('tb_info_app_user.id', ondelete='RESTRICT', onupdate='RESTRICT'), nullable=False, index=True)
@@ -110,12 +128,26 @@ class TbInfoGroupUser(Base):
     __table_args__ = {'comment': '用户和群'}
 
     id = Column(Integer, primary_key=True)
-    app_user_id = Column(ForeignKey('tb_info_app_user.id', ondelete='RESTRICT', onupdate='RESTRICT'), nullable=False, index=True)
+    app_user_id = Column(ForeignKey('tb_info_app_user.id'), nullable=False, index=True)
     group_id = Column(ForeignKey('tb_info_group.id'), nullable=False, index=True)
     create_datetime = Column(DateTime, nullable=False)
 
     app_user = relationship('TbInfoAppUser')
     group = relationship('TbInfoGroup')
+
+
+class TbSearch(Base):
+    __tablename__ = 'tb_search'
+    __table_args__ = {'comment': '搜索记录'}
+
+    id = Column(Integer, primary_key=True)
+    app_user_id = Column(ForeignKey('tb_info_app_user.id'), nullable=False, index=True)
+    keywords = Column(VARCHAR(255))
+    content = Column(TEXT)
+    record_datetime = Column(DateTime)
+    create_datetime = Column(DateTime, nullable=False)
+
+    app_user = relationship('TbInfoAppUser')
 
 
 class TbTelephoneRecord(Base):

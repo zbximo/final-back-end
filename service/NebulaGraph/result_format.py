@@ -28,13 +28,17 @@ def format_path(result: ResultSet) -> pd.DataFrame:
         for i in v:
             # print(i.__dict__)
             i: PathWrapper
-            for t in i.nodes():
-                print(t.properties(t.tags()[0]), end=" *** ")
+            # for t in i.nodes():
+                # print(t.properties(t.tags()[0]))
+            for t in i.relationships():
+                print(t.properties())
+                # print(t.properties(t.()[0]), end=" *** ")
+
                 # r: Vertex = t.__dict__["_value"]
                 # print(t.tags(), t.get_id(), t.__dict__["_value"])
                 # break
-            print('*' * 20)
-            print(i.start_node(), i.length(), i.nodes())
+            # print('*' * 20)
+            # print(i.start_node(), i.length(), i.nodes())
         break
     # return pd.DataFrame()
     # print(pd.DataFrame.from_dict(d))

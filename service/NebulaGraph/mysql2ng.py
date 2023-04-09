@@ -29,6 +29,8 @@ def fromTbInfoUser2NodeUserInfo(user_list):
             node.card_id = result["card_id"]
             node.birthday = result["birthday"]
             node.sex = "男" if result["sex"] == "M" else "女"
+            node.arrested = "否" if result["arrested"] == "N" else "是"
+            node.score = result['score']
             result_nodes.append(node)
     else:
         result = result_dic
@@ -38,6 +40,31 @@ def fromTbInfoUser2NodeUserInfo(user_list):
         node.card_id = result["card_id"]
         node.birthday = result["birthday"]
         node.sex = "男" if result["sex"] == "M" else "女"
+        result_nodes = node
+    return result_nodes
+
+    # r = UserService(Session).get_search_nodes()
+
+
+def fromTbSearch2NodeSearchInfo(app_user_list):
+    """
+
+    :param app_user_list: List<int>
+    :return:
+    """
+    # result_dic = model_json.model_to_dict(app_user_list)
+    if isinstance(app_user_list, list):
+        result_nodes = []
+        for app_user_id in app_user_list:
+            node = NodeSearchInfo()
+            node.id = "NodeSearchInfo_" + str(app_user_id)
+            node.app_user_id = app_user_id
+            result_nodes.append(node)
+    else:
+        app_user_id = app_user_list
+        node = NodeSearchInfo()
+        node.id = "NodeSearchInfo_" + str(app_user_id)
+        node.app_user_id = app_user_id
         result_nodes = node
     return result_nodes
 
@@ -145,16 +172,62 @@ def fromTbInfoAppUser2RelationAppUser(app_user_list):
         for app_user_model in app_user_list:
             app_user = model_json.model_to_dict(app_user_model)
             relation = RelationAppUser()
-            relation.id = str(app_user["id"])
+            relation.id = "RelationAppUser_" + str(app_user["id"])
             relation.from_user = "NodeUserInfo_" + str(app_user["user_id"])
             relation.to_app = "NodeAppUserInfo_" + str(app_user["app_id"])
             result_nodes.append(relation)
     else:
         app_user = model_json.model_to_dict(app_user_list)
         relation = RelationAppUser()
-        relation.id = str(app_user["id"])
+        relation.id = "RelationAppUser_" + str(app_user["id"])
         relation.from_user = "NodeUserInfo_" + str(app_user["user_id"])
         relation.to_app = "NodeAppUserInfo_" + str(app_user["app_id"])
+        result_nodes = relation
+    return result_nodes
+
+
+def fromTbDelivery2RelationDeliveryRecord(delivery_list):
+    # RelationDeliveryRecord
+
+    if isinstance(delivery_list, list):
+        result_nodes = []
+        for delivery_record in delivery_list:
+            relation = RelationDeliveryRecord()
+            relation.id = "RelationDeliveryRecord_" + str(delivery_record[0])
+            relation.from_user_id = "NodeUserInfo_" + str(delivery_record[1])
+            relation.to_user_id = "NodeUserInfo_" + str(delivery_record[2])
+
+            relation.records = str(delivery_record[3])
+            result_nodes.append(relation)
+    else:
+        delivery_record = delivery_list
+        relation = RelationDeliveryRecord()
+        relation.id = "RelationDeliveryRecord_" + str(delivery_record[0])
+        relation.from_user_id = "NodeUserInfo_" + str(delivery_record[1])
+        relation.to_user_id = "NodeUserInfo_" + str(delivery_record[2])
+        relation.records = str(delivery_record[3])
+        result_nodes = relation
+    return result_nodes
+
+
+def fromTbSearch2RelationSearchRecord(search_list):
+    # TbSearch
+    if isinstance(search_list, list):
+        result_nodes = []
+        for search_record in search_list:
+            relation = RelationSearchRecord()
+            relation.id = "RelationSearchRecord_" + str(search_record[0])
+            relation.from_app_user_id = "NodeAppUserInfo_" + str(search_record[1])
+            relation.to_search_id = "NodeSearchInfo_" + str(search_record[2])
+            relation.records = str(search_record[3])
+            result_nodes.append(relation)
+    else:
+        search_record = search_list
+        relation = RelationSearchRecord()
+        relation.id = "RelationSearchRecord_" + str(search_record[0])  # appuserid
+        relation.from_app_user_id = "NodeAppUserInfo_" + str(search_record[1])
+        relation.to_search_id = "NodeSearchInfo_" + str(search_record[2])
+        relation.records = str(search_record[3])
         result_nodes = relation
     return result_nodes
 
@@ -166,7 +239,7 @@ def fromTbInfoGroupUser2RelationUserAppGroup(user_app_group_list):
         for user_app_group_model in user_app_group_list:
             user_app_group = model_json.model_to_dict(user_app_group_model)
             relation = RelationUserAppGroup()
-            relation.id = str(user_app_group["id"])
+            relation.id = "RelationUserAppGroup_" + str(user_app_group["id"])
             relation.from_app_user_id = "NodeAppUserInfo_" + str(user_app_group["app_user_id"])
             relation.to_app_group_id = "NodeGroupInfo_" + str(user_app_group["group_id"])
             relation.contents = str([
@@ -180,7 +253,7 @@ def fromTbInfoGroupUser2RelationUserAppGroup(user_app_group_list):
     else:
         user_app_group = model_json.model_to_dict(user_app_group_list)
         relation = RelationUserAppGroup()
-        relation.id = str(user_app_group["id"])
+        relation.id = "RelationUserAppGroup_" + str(user_app_group["id"])
         relation.from_app_user_id = "NodeAppUserInfo_" + str(user_app_group["app_user_id"])
         relation.to_app_group_id = "NodeGroupInfo_" + str(user_app_group["group_id"])
         relation.contents = str([
@@ -201,14 +274,14 @@ def fromTbInfoTelephone2RelationTelephoneInfo(tel_list):
         for user_tel_model in tel_list:
             user_app_group = model_json.model_to_dict(user_tel_model)
             relation = RelationTelephoneInfo()
-            relation.id = str(user_app_group["id"])
+            relation.id = "RelationTelephoneInfo_" + str(user_app_group["id"])
             relation.from_user_id = "NodeUserInfo_" + str(user_app_group["user_id"])
             relation.to_telephone_id = "NodeTelephoneInfo_" + str(user_app_group["id"])
             result_nodes.append(relation)
     else:
         user_app_group = model_json.model_to_dict(tel_list)
         relation = RelationTelephoneInfo()
-        relation.id = str(user_app_group["id"])
+        relation.id = "RelationTelephoneInfo_" + str(user_app_group["id"])
         relation.from_user_id = "NodeUserInfo_" + str(user_app_group["user_id"])
         relation.to_telephone_id = "NodeTelephoneInfo_" + str(user_app_group["id"])
         result_nodes = relation
@@ -222,7 +295,7 @@ def fromTbContentPersonal2RelationPersonalContent(content_list):
         for personal_content_model in content_list:
             # user_app_group = model_json.model_to_dict(personal_content_model)
             relation = RelationPersonalContent()
-            relation.id = str(personal_content_model[0])
+            relation.id = "RelationPersonalContent_" + str(personal_content_model[0])
             relation.from_app_user_id = "NodeAppUserInfo_" + str(personal_content_model[1])
             relation.to_app_user_id = "NodeAppUserInfo_" + str(personal_content_model[2])
             relation.contents = str(personal_content_model[3])
@@ -230,7 +303,7 @@ def fromTbContentPersonal2RelationPersonalContent(content_list):
     else:
         personal_content_model = content_list
         relation = RelationPersonalContent()
-        relation.id = str(content_list[0])
+        relation.id = "RelationPersonalContent_" + str(content_list[0])
         relation.from_app_user_id = "NodeAppUserInfo_" + str(personal_content_model[1])
         relation.to_app_user_id = "NodeAppUserInfo_" + str(personal_content_model[2])
         relation.contents = str(personal_content_model[3])
@@ -251,7 +324,7 @@ def fromTbTelephoneRecord2RelationTelephoneRecord(tel_record_list):
             # user_app_group = model_json.model_to_dict(user_tel_model)
 
             relation = RelationTelephoneRecord()
-            relation.id = str(tel_record[0])
+            relation.id = "RelationTelephoneRecord_" + str(tel_record[0])
             relation.from_telephone_id = "NodeTelephoneInfo_" + str(tel_record[1])
             relation.to_telephone_id = "NodeTelephoneInfo_" + str(tel_record[2])
             relation.records = str(tel_record[3])
@@ -259,7 +332,7 @@ def fromTbTelephoneRecord2RelationTelephoneRecord(tel_record_list):
     else:
         tel_record = tel_record_list
         relation = RelationTelephoneRecord()
-        relation.id = str(tel_record[0])
+        relation.id = "RelationTelephoneRecord_" + str(tel_record[0])
         relation.from_telephone_id = "NodeTelephoneInfo_" + str(tel_record[1])
         relation.to_telephone_id = "NodeTelephoneInfo_" + str(tel_record[2])
         relation.records = tel_record[3]

@@ -29,7 +29,7 @@ class InitSpace:
         self.create_space()
         self.create_tags()
         self.create_edges()
-        self.create_data()
+        # self.create_data()
 
     def create_space(self):
         ng_session: Session = self.ng_connection_pool.get_session("root", "nebula")
@@ -37,7 +37,7 @@ class InitSpace:
         print("drop space:", r.is_succeeded())
         r = ng_session.execute("CREATE SPACE IF NOT EXISTS {} (vid_type=FIXED_STRING(64)); ".format(self.space_name))
         print("create space:", r.is_succeeded())
-        print(r.__dict__)
+        # print(r.__dict__)
         # ng_session.execute("CLEAR SPACE {};".format(self.space_name))
         ng_session.release()
 
@@ -56,8 +56,9 @@ class InitSpace:
                     # 如果类型注释是字符串，则将其转换为类型对象
                     value = eval(value)
                 _type = value.__name__
-                if _type != "int":
+                if _type != "int" and _type != "float":
                     _type = "string"
+
                 props.append([name, _type])
             tag_list.append({"name": class_name, "prop": props})
 
@@ -90,7 +91,7 @@ class InitSpace:
             nosql = nosql[:-1] + " )"
             # print(nosql)
             r = ng_session.execute(nosql)
-            print("CREATE EDGES:", r.is_succeeded())
+            print("CREATE EDGES:", r.is_succeeded(), edge["name"])
             # ng_session.execute("CREATE EDGE IF NOT EXISTS {}(degree int);".format(edge["name"]))
         ng_session.release()
 
@@ -119,6 +120,10 @@ class InitSpace:
         user_tel_list_nodes = mysql2ng.fromTbInfoTelephone2NodeTelephoneInfo(user_tel_list_models)
         CD.insert_nodes(user_tel_list_nodes, "test_final")
 
+        search_list_models = UserService(mysql_session).get_search_nodes()
+        search_list_nodes = mysql2ng.fromTbSearch2NodeSearchInfo(search_list_models)
+        CD.insert_nodes(search_list_nodes, "test_final")
+
         # ----------------------------Relations----------------------------
         app_user_list_models = UserService(mysql_session).get_all_app_user()
         app_user_list_edges = mysql2ng.fromTbInfoAppUser2RelationAppUser(app_user_list_models)
@@ -133,12 +138,20 @@ class InitSpace:
         CD.insert_edges(user_tel_list_edges, "test_final")
 
         user_tel_list_models = UserService(mysql_session).get_all_user_telephone_record()
-        user_tel_list_edges = mysql2ng.fromTbTelephoneRecord2RelationTelephoneRecord(user_tel_list_models)[592]
+        user_tel_list_edges = mysql2ng.fromTbTelephoneRecord2RelationTelephoneRecord(user_tel_list_models)
         CD.insert_edges(user_tel_list_edges, "test_final")
 
         app_user_list_models = UserService(mysql_session).get_all_personal_content()
-        app_user_list_edges = mysql2ng.fromTbContentPersonal2RelationPersonalContent(app_user_list_models)[592]
+        app_user_list_edges = mysql2ng.fromTbContentPersonal2RelationPersonalContent(app_user_list_models)
         CD.insert_edges(app_user_list_edges, "test_final")
+
+        search_record_list_models = UserService(mysql_session).get_all_search_record()
+        search_record_list_edges = mysql2ng.fromTbSearch2RelationSearchRecord(search_record_list_models)
+        CD.insert_edges(search_record_list_edges, "test_final")
+
+        search_record_list_models = UserService(mysql_session).get_all_delivery_record()
+        search_record_list_edges = mysql2ng.fromTbDelivery2RelationDeliveryRecord(search_record_list_models)
+        CD.insert_edges(search_record_list_edges, "test_final")
 
 
 class CreateData:
@@ -179,6 +192,8 @@ class CreateData:
         r = ng_session.execute(nosql)
         print(node_tag, " INSERT V:", r.is_succeeded())
         # print(r.__dict__)
+        if not r.is_succeeded():
+            print(r.__dict__)
         ng_session.release()
 
     def insert_edges(self, edge_list, space_name):
@@ -224,12 +239,20 @@ class CreateData:
 
 
 if __name__ == '__main__':
-    print(1)
+    # print(1)
     IS = InitSpace("test_final")
+    # IS.create_space()
     # IS.create_data()
     # IS.create_all()
     IS.create_data()
+
     # mysql_session = MysqlConnect("10.66.10.234:3306", "root", "234").connect("final")
+    # search_record_list_models = UserService(mysql_session).get_all_search_record()
+    # search_record_list_edges = mysql2ng.fromTbSearch2RelationSearchRecord(search_record_list_models)
+    # print(search_record_list_edges)
+    # for i in search_record_list_edges:
+    #     print(i,i.__dict__)
+    #     break
     #
     # ng_connection_pool = NebulaConnector("10.66.10.234", 9669, "root", "nebula").connect()
     # nosql ="""
@@ -257,23 +280,3 @@ if __name__ == '__main__':
     #         print(obj.__name__)
     # values = '"{}"'.format(1)
     # print(values)
-    d = {
-        "type": "",
-        "keywords": {
-            "zj": {
-                "佛教": {
-                    "text": [],
-                    "img": []
-                },
-                "基督教教": {
-                    "text": [],
-                    "img": []
-                }
-            },
-            "book": [],
-            "amount": [],
-            "wx": [],
-            "bank": [],
-            "phone": []
-        }
-    }

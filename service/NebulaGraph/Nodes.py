@@ -24,6 +24,8 @@ class NodeUserInfo:
     card_id: str
     birthday: str
     sex: str
+    arrested: str
+    score: float
 
 
 class NodeAppUserInfo:
@@ -57,3 +59,11 @@ class NodeTelephoneInfo:
     id: str
     user_id: int  # 连接NodeUserInfo: id，不显示
     telephone: str
+
+
+class NodeSearchInfo:
+    # TbSearch表 根据app_user_id distinct创建
+    __NodeName__ = 'SearchInfo'
+    __type__ = "Node"
+    id: str  # 也为app_user_id
+    app_user_id: int  # 连接NodeUserInfo: id，不显示

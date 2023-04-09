@@ -93,3 +93,49 @@ class RelationTelephoneRecord:
         }
     ]
     """
+
+
+class RelationDeliveryRecord:
+    # TbTelephoneRecord
+    __ReName__ = 'RelationDeliveryRecord'
+    __type__ = "Relation"
+    # __args__ = {'comment': '个人间电话记录'}
+    __args__ = "边：关联 用户信息 和 用户信息。用户快递信息 "
+
+    id: str
+    # NodeUserInfo-->NodeUserInfo
+    from_user_id: str  # NodeUserInfo.id
+    to_user_id: str  # NodeUserInfo.id
+    records: dict
+    """
+    [
+        {
+            "from_address": str,
+            "to_address": str,
+            "record_datetime": datetime
+        }
+    ]
+    """
+
+
+class RelationSearchRecord:
+    # TbTelephoneRecord
+    __ReName__ = 'RelationSearchRecord'
+    __type__ = "Relation"
+    # __args__ = {'comment': '个人间电话记录'}
+    __args__ = "边：关联 用户APP信息 和 搜索信息。用户搜索信息 "
+
+    id: str
+    # NodeAPPUserInfo-->NodeSearchInfo
+    from_app_user_id: str  # NodeAppUserInfo.id
+    to_search_id: str  # NodeSearchInfo.id == NodeAppUserInfo.id
+    records: dict
+    """
+    [
+        {
+             "content": str,
+             "keywords": str,
+             "record_datetime": str
+        }
+    ]
+    """
