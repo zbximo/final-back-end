@@ -105,7 +105,13 @@ class InitSpace:
         # ----------------------------Nodes----------------------------
 
         user_list_models = UserService(mysql_session).get_all_user()
+        for i in user_list_models:
+            print(i.__dict__)
+            break
         user_list_nodes = mysql2ng.fromTbInfoUser2NodeUserInfo(user_list_models)
+        for i in user_list_nodes:
+            print(i.__dict__)
+            break
         CD.insert_nodes(user_list_nodes, "test_final")
 
         app_user_list_models = UserService(mysql_session).get_all_app_name_user()

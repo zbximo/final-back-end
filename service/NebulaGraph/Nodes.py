@@ -24,6 +24,7 @@ class NodeUserInfo:
     card_id: str
     birthday: str
     sex: str
+    address: str
     arrested: str
     score: float
 

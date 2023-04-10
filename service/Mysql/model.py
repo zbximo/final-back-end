@@ -25,6 +25,7 @@ class TbInfoUser(Base):
     card_id = Column(VARCHAR(255), nullable=False)
     birthday = Column(Date)
     sex = Column(VARCHAR(255))
+    address = Column(String(255, 'utf8mb4_bin'), comment='户籍地')
     arrested = Column(String(255, 'utf8mb4_bin'), comment='是否被抓捕')
     score = Column(Float, comment='分数')
     create_datetime = Column(DateTime, nullable=False)

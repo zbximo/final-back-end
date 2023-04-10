@@ -29,6 +29,7 @@ def fromTbInfoUser2NodeUserInfo(user_list):
             node.card_id = result["card_id"]
             node.birthday = result["birthday"]
             node.sex = "男" if result["sex"] == "M" else "女"
+            node.address = result["address"]
             node.arrested = "否" if result["arrested"] == "N" else "是"
             node.score = result['score']
             result_nodes.append(node)
@@ -40,6 +41,9 @@ def fromTbInfoUser2NodeUserInfo(user_list):
         node.card_id = result["card_id"]
         node.birthday = result["birthday"]
         node.sex = "男" if result["sex"] == "M" else "女"
+        node.address = result["address"]
+        node.arrested = "否" if result["arrested"] == "N" else "是"
+        node.score = result['score']
         result_nodes = node
     return result_nodes
 
